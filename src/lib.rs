@@ -1,24 +1,32 @@
 //! Roman crate provides the functionality to convert roman numerals into a u32 integer
 
 use std::str::FromStr;
-use std::num::ParseIntError;
+// use std::num::ParseIntError;
+use std::num::IntErrorKind;
 
 /// Roman numeral data type
-struct Roman(String);
+struct Roman(u32);
 
-impl Roman {
-    /// Creates a Roman instance
-    fn new(value: &str) -> Self {
-        Roman(value.to_string())
-    }
-}
 
 impl FromStr for Roman {
-    
+    type Err = IntErrorKind;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // let e = std::num::IntErrorKind::InvalidDigit;
+        match s {
+            "i" => Ok(Roman(1)),
+            "ii" => Ok(Roman(2)),
+            "iii" => Ok(Roman(3)),
+            "iv" => Ok(Roman(4)),
+            "v" => Ok(Roman(5)),
+            _ => Err(IntErrorKind::InvalidDigit)
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use crate::Roman;
 
     fn roman_input_and_output<'a>() -> Vec<(&'a str, u32)> {
@@ -28,9 +36,8 @@ mod tests {
     #[test]
     fn test_parse() {
         for v in roman_input_and_output() {
-            let rm = Roman::new(v.0);
-            let n = rm.parse().unwrap();
-            assert_eq!(v.1, n);
+            let n = Roman::from_str(v.0);
+            assert_eq!(v.1, n.unwrap().0);
         }
     }
 }
