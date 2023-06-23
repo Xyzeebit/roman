@@ -1,8 +1,13 @@
 //! Roman crate provides the functionality to convert roman numerals into a ````u32``` integer
 //! and from ```u32``` integers to roman numeral ```String```.
+//! ## Example
+//! ```rust
+//!     use roman::Roman;
+//! 
+//!     let n = Roman::to_int("xxiv".to_string()).unwrap();
+//!     assert_eq!(n, 24);
+//! ```
 
-use core::num;
-use std::{collections::HashMap, default};
 
 /// Roman numeral data type
 pub struct Roman;
@@ -10,9 +15,9 @@ pub struct Roman;
 impl Roman {
     /// Roman's ```to_int``` method is used to parse roman numerals into ```u32``` integers.
     /// 
-    /// Parses a string v and returns a value of type ```u32```
-    fn to_int(v: String) -> u32 {
-        unimplemented!()
+    /// Parses a ```String``` v and returns a value of type ```Option<u32>```
+    pub fn to_int(v: String) -> Option<u32> {
+        convert_roman_to_number(&v)
     }
 
     /// Roman's ```from_int``` method is used to parse an unsigned integer into a ```String```.
