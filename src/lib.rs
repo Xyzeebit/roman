@@ -1,6 +1,8 @@
-//! Roman crate provides the functionality to convert roman numerals into a u32 integer
+//! Roman crate provides the functionality to convert roman numerals into a ````u32``` integer
+//! and from ```u32``` integers to roman numeral ```String```.
 
-use std::collections::HashMap;
+use core::num;
+use std::{collections::HashMap, default};
 
 /// Roman numeral data type
 pub struct Roman;
@@ -22,41 +24,78 @@ impl Roman {
     
 }
 
-/// ```get_number_from_roman``` function takes a ```&str``` input and returns
+/// ```get_number_from_roman``` function takes a ```char``` input and returns
 /// 
 /// an ```Option<u32>``` value
-fn get_number_from_roman<'a>(v: &'a str) -> Option<u32> {
-    let mut rome: HashMap<String, u32> = HashMap::new();
-    rome.insert("I".to_string(), 1);
-    rome.insert("V".to_string(), 5);
-    rome.insert("X".to_string(), 10);
-    rome.insert("L".to_string(), 50);
-    rome.insert("C".to_string(), 100);
-    rome.insert("D".to_string(), 500);
-    rome.insert("M".to_string(), 1000);
-
-    let s = v.to_string().to_uppercase();
-
-    if let Some(x) = rome.get(&s) {
-        Some(x.to_owned())
-    } else {
-        None
+fn get_number_from_roman(ch: char) -> Option<u32> {
+    match ch.to_ascii_uppercase() {
+        'I' => Some(1),
+        'V' => Some(5),
+        'X' => Some(10),
+        'L' => Some(50),
+        'C' => Some(100),
+        'D' => Some(500),
+        'M' => Some(1000),
+        _ => None
     }
+}
+
+/// ```convert_roman_to_number``` function parses a roman numeral into a number. It 
+/// takes a ```&str``` ```v``` and returns a value of type ```Option<u32>```.
+fn convert_roman_to_number<'a>(v: &'a str) -> Option<u32> {
+    
+    // value to hold the converted number string
+    let mut converted = 0u32;
+    let mut prev = 0u32;
+    for ch in v.to_uppercase().chars() {
+        // get the roman numeral number equivalent
+        let number = get_number_from_roman(ch);
+        if number.is_some() {
+            if prev == 0 {
+                converted = number.unwrap();
+                prev = number.unwrap();
+            } else {
+                if prev == number.unwrap() || prev > number.unwrap() {
+                    converted += number.unwrap();
+                    prev = number.unwrap();
+                } else {
+                    converted -= number.unwrap();
+                    prev = number.unwrap();
+                }
+            }
+        }
+    }
+
+    None
 }
 
 #[cfg(test)]
 mod tests {
 
-    use crate::{get_number_from_roman};
+    use crate::{get_number_from_roman, convert_roman_to_number};
 
-    fn roman_main_numbers<'a>() -> Vec<(&'a str, u32)> {
-        vec![("I", 1), ("V", 5), ("X", 10), ("l", 50), ("c", 100), ("d", 500), ("m", 1000)]
+    fn roman_main_numbers_inputs_output() -> Vec<(char, u32)> {
+        vec![('I', 1), ('V', 5), ('X', 10), ('l', 50), ('c', 100), ('d', 500), ('m', 1000)]
     }
 
     #[test]
     fn test_get_number_from_rome() {
-        for v in roman_main_numbers() {
+        for v in roman_main_numbers_inputs_output() {
             let n = get_number_from_roman(v.0).unwrap();
+            assert_eq!(n, v.1);
+        }
+    }
+
+    fn convert_roman_to_number_inputs_output<'a>() -> Vec<(&'a str, u32)> {
+        vec![("I", 1), ("iV", 5), ("iX", 9), ("li", 51), ("cx", 110), 
+        ("dc", 600), ("ml", 1050), ("xxxvi", 36), ("xvI", 16), ("liv", 54),
+        ("xlv", 45), ("XLII", 42)]
+    }
+
+    #[test]
+    fn test_roman_to_number_converter() {
+        for v in convert_roman_to_number_inputs_output() {
+            let n = convert_roman_to_number(v.0).unwrap();
             assert_eq!(n, v.1);
         }
     }
