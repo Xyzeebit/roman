@@ -15,15 +15,18 @@ pub struct Roman;
 impl Roman {
     /// Roman's ```to_int``` method is used to parse roman numerals into ```u32``` integers.
     /// 
-    /// Parses a ```String``` v and returns a value of type ```Option<u32>```
-    pub fn to_int(v: String) -> Option<u32> {
-        convert_roman_to_number(&v)
+    /// Parses a ```String``` v and returns a value of type ```Result<u32, String>```
+    pub fn to_int(v: String) -> Result<u32, String> {
+        if let Some(x) = convert_roman_to_number(&v) {
+            return Ok(x)
+        }
+        Err("Invalid roman numeral".to_string())
     }
 
     /// Roman's ```from_int``` method is used to parse an unsigned integer into a ```String```.
     /// 
     /// Parses a ```u32``` input value and returns a value of type ```String```.
-    fn from_int(v: u32) -> String {
+    pub fn from_int(v: u32) -> String {
         unimplemented!()
     }
     
