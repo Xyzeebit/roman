@@ -59,14 +59,21 @@ fn convert_roman_to_number<'a>(v: &'a str) -> Option<u32> {
                     converted += number.unwrap();
                     prev = number.unwrap();
                 } else {
-                    converted -= number.unwrap();
+                    if converted < number.unwrap() {
+                        converted = number.unwrap() - prev;
+                    } else {
+                        converted -= prev;
+                        converted += number.unwrap() - prev;
+                    }
                     prev = number.unwrap();
                 }
             }
+        } else {
+            return None;
         }
     }
 
-    None
+    Some(converted)
 }
 
 #[cfg(test)]
@@ -87,9 +94,9 @@ mod tests {
     }
 
     fn convert_roman_to_number_inputs_output<'a>() -> Vec<(&'a str, u32)> {
-        vec![("I", 1), ("iV", 5), ("iX", 9), ("li", 51), ("cx", 110), 
+        vec![("I", 1), ("iV", 4), ("iX", 9), ("li", 51), ("cx", 110), ("mmxxiii", 2023), 
         ("dc", 600), ("ml", 1050), ("xxxvi", 36), ("xvI", 16), ("liv", 54),
-        ("xlv", 45), ("XLII", 42)]
+        ("xlv", 45), ("XLII", 42), ("xiii", 13), ("miv", 1004), ("mmmiv", 3004)]
     }
 
     #[test]
