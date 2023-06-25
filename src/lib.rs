@@ -1,5 +1,5 @@
-//! Roman crate provides the functionality to convert roman numerals into a ````u32``` integer
-//! and from ```u32``` integers to roman numeral ```String```.
+//! Roman crate provides the functionality to convert roman numerals into a u32 integer
+//! and from u32 integers to roman numeral String.
 //! ## Example
 //! ```rust
 //!     use roman::Roman;
@@ -48,6 +48,13 @@ fn get_number_from_roman(ch: char) -> Option<u32> {
     }
 }
 
+fn get_roman_from_number(n: u32) -> Option<String> {
+    match n {
+        (1..=3) => Some("".to_string()),
+        _ => None
+    }
+}
+
 /// ```convert_roman_to_number``` function parses a roman numeral into a number. It 
 /// takes a ```&str``` ```v``` and returns a value of type ```Option<u32>```.
 fn convert_roman_to_number<'a>(v: &'a str) -> Option<u32> {
@@ -84,10 +91,16 @@ fn convert_roman_to_number<'a>(v: &'a str) -> Option<u32> {
     Some(converted)
 }
 
+/// ```convert_number_to_roman``` function parses an integer number into a roman numeral. It 
+/// takes a ```u32``` ```v``` and returns a value of type ```Option<String>```.
+fn convert_number_to_roman(v: u32) -> Option<String> {
+    unimplemented!()
+}
+
 #[cfg(test)]
 mod tests {
 
-    use crate::{get_number_from_roman, convert_roman_to_number};
+    use crate::{get_number_from_roman, convert_roman_to_number, convert_number_to_roman};
 
     fn roman_main_numbers_inputs_output() -> Vec<(char, u32)> {
         vec![('I', 1), ('V', 5), ('X', 10), ('l', 50), ('c', 100), ('d', 500), ('m', 1000)]
@@ -112,6 +125,14 @@ mod tests {
         for v in convert_roman_to_number_inputs_output() {
             let n = convert_roman_to_number(v.0).unwrap();
             assert_eq!(n, v.1);
+        }
+    }
+
+    #[test]
+    fn test_number_to_roman_converter() {
+        for v in convert_roman_to_number_inputs_output() {
+            let r = convert_number_to_roman(v.1).unwrap();
+            assert_eq!(r, v.0);
         }
     }
 }
